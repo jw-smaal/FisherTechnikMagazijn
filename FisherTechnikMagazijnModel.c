@@ -34,137 +34,98 @@ void flashntimes(int n){
 
 void allOff()
 {
-    motorOff();
-    vacuumOff();
     ledOff();
-    hefboomUp();
-    compressorOff();
+    motorXoff();
+    motorYoff();
+    motorZoff();
 }
 
 
 void motorTurnSteps(int direction, int steps){
-    motorTurn(direction);
-    motorCountSteps(steps);
-    motorOff();
+    //motorXturn(direction);
+    //motorCountSteps(steps);
+    //motorOff();
 }
 
-void motorTurn(int direction)
+void motorXturn(int direction)
 {
     if(direction == LEFT) {
-        PORTD &= ~(1<<OUT_MOTOR2A); // Clear bit
-        PORTD |= ( (1<<OUT_MOTOR_EN) | (1<<OUT_MOTOR1A) ); // Set bit
+        PORTD &= ~(1<<OUT_MOTOR_X2);
+        PORTD |= (1<<OUT_MOTOR_X1);
     }
     else {  // Right
-        PORTD &= ~(1<<OUT_MOTOR1A);
-        PORTD |= ( (1<<OUT_MOTOR_EN) | (1<<OUT_MOTOR2A) );
+        PORTD &= ~(1<<OUT_MOTOR_X1);
+        PORTD |= (1<<OUT_MOTOR_X2);
     }
 }
 
-void motorOff(void)
+
+void motorYturn(int direction)
 {
-    PORTD &= ~(1<<OUT_MOTOR_EN); // clear enable bit
+    if(direction == LEFT) {
+        PORTB &= ~(1<<OUT_MOTOR_Y2);
+        PORTD |= (1<<OUT_MOTOR_Y1);
+    }
+    else {  // Right
+        PORTD &= ~(1<<OUT_MOTOR_Y1);
+        PORTB |= (1<<OUT_MOTOR_Y2);
+    }
 }
 
-void compressorOn(void)
+
+void motorZturn(int direction)
 {
-    PORTC |= (1<<OUT_COMPRESSOR);
+    if(direction == LEFT) {
+        PORTB &= ~(1<<OUT_MOTOR_Z2);
+        PORTB |= (1<<OUT_MOTOR_Z1);
+    }
+    else {  // Right
+        PORTB &= ~(1<<OUT_MOTOR_Z1);
+        PORTB |= (1<<OUT_MOTOR_Z2);
+    }
 }
 
-void compressorOff(void)
+void motorXoff(void)
 {
-    PORTC &= ~(1<<OUT_COMPRESSOR);
+    PORTD &= ~((1<<OUT_MOTOR_X1) | (1<<OUT_MOTOR_X2));
 }
 
-void vacuumOn(void)
+void motorYoff(void)
 {
-    PORTC |= (1<<OUT_VACUUM);
+    PORTD &= ~(1<<OUT_MOTOR_Y1);
+    PORTB &= ~(1<<OUT_MOTOR_Y2);
 }
 
-void vacuumOff(void)
+void motorZoff(void)
 {
-    PORTC &= ~(1<<OUT_VACUUM);
+    PORTB &= ~((1<<OUT_MOTOR_Z1) | (1<<OUT_MOTOR_Z2));
 }
 
-void hefboomUp(void)
-{
-    PORTC &= ~(1<<OUT_HEFBOOM);
-}
-
-void hefboomDown(void)
-{
-    PORTC |= (1<<OUT_HEFBOOM);
-}
 
 void ledOn(void)
 {
-    PORTB &= ~(1<<OUT_LED);
+   // PORTD |= (1<<OUT_LED);
 }
 
 void ledOff(void)
 {
-    PORTB |= (1<<OUT_LED);
-}
-
-void motorCountSteps(int steps)
-{
-    uint8_t motor_steps;
-    
-    motor_steps = 0;
-    do {
-        // Logic 1 (no step), logic 0 (step)
-        while((PIND & (1<<IN_STEPS)) ? 1: 0 ){
-            // wait for falling edge
-        }
-        motor_steps++;
-        if(motor_steps == steps) {
-            return; // Don't wait for rising edge
-        }
-        _delay_ms(10); // De-bounce
-        while((PIND & (1<<IN_STEPS)) ? 0: 1 ){
-            // wait for rising edge
-        }
-        motor_steps++;
-        if(motor_steps == steps){
-            return; 
-        }
-        //_delay_ms(1); // De-bounce
-    } while (motor_steps < steps);
+    //PORTD &= ~(1<<OUT_LED);
 }
 
 /**
- * Colour sensor ADC conversion.
+ * Potmeter ADC conversion
  */
-uint8_t readColorSensor(void)
+uint16_t readPotMeter(void)
 {
     uint16_t adc_value;
-    uint8_t detected_color = INVALID;
    
     ADCSRA |= (1<<ADSC); // start conversion
     while((ADCSRA & (1<<ADSC))==1<<ADSC) {
         // wait for conversion to complete.
     }
     adc_value = ADCL; // first read ADCL then ADCH; read datasheet!
-    adc_value |= ADCH<<8 ; // 2.91V = open;
-    // 2.93V = blue;
-    // 2.56V = red;
-    // 2.48V = white;
-    if(adc_value <= (1024/5)*2.53){
-        // WHITE
-        detected_color = WHITE;
-        flashntimes(2);
-    }
-    else if(adc_value >= (1024/5)*2.56  && adc_value < (1024/5)*2.80) {
-        // RED
-        detected_color = RED;
-        flashntimes(1);
-    }
-    else if(adc_value > (1024/5)*2.90) {
-        // BLUE
-        detected_color = BLUE;
-        flashntimes(3);
-    }
-    /* done with detection */
-    return detected_color;
+    adc_value |= ADCH<<8 ;
+    return adc_value;
 }
 
 /* EOF */

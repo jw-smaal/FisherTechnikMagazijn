@@ -27,16 +27,18 @@ void main(void) __attribute__((noreturn));
  */
 void init_mcu(void)
 {
-    int i;
     /*
      * INIT data direction register:
      */
-    DDRB =  0b00000001; // LED
-    DDRC =  0b00111000; // Vacuum
-    DDRD =  0b11100000; // Motor
+    DDRB =  (1<<OUT_MOTOR_Y2) | (1<<OUT_MOTOR_Z1) | (1<<OUT_MOTOR_Z2);
+    DDRB &= ~((1<<IN_JOYSTICK_LEFT) | (1<<IN_JOYSTICK_DOWN));
+    DDRC &= ~( (1<<IN_POTMETER) | (1<<IN_JOYSTICK_UP) | (1<<IN_JOYSTICK_RIGHT) ) ;
+    DDRD =  (1<<OUT_MOTOR_X1) | (1<<OUT_MOTOR_X2) | (1<<OUT_MOTOR_Y1) | (1<<OUT_LED);
     
-    PORTC = 0b00000000; // Do not enable pullup on the ADC port.
-    PORTD = 0b00000111; // Enable 20k pullup resistor on pinD 0,1 and 2
+    
+    PORTB = (1<<IN_JOYSTICK_LEFT) | (1<<IN_JOYSTICK_DOWN) ;
+    PORTC = (1<<IN_JOYSTICK_UP) | (1<<IN_JOYSTICK_RIGHT) ;  // Note: no pull-up on ADC-input!
+    PORTD = 0;
     
     /*
      * INIT timer registers:
@@ -54,6 +56,7 @@ void init_mcu(void)
     
     
     
+#if 0
     // This ledsequence is to indicate power-on-reset.
     allOff();
     for(i = 0; i < 5; i++){
@@ -62,6 +65,8 @@ void init_mcu(void)
         ledOff();
         _delay_ms(100);
     }
+#endif 
+    
 }
 
 
@@ -72,92 +77,58 @@ void init_mcu(void)
  */
 void main(void)
 {
-    uint8_t light_sensor;
-    uint8_t motor_end;
-   // uint16_t adc_value;
-    uint8_t detected_color;
     
     init_mcu();
     
     // main run loop never exit!
     while(1) {
-        
-        // Wait for IN_LIGHT to be interupted (1 == interupted; 0 = open)
-        do {
-            light_sensor  = ( PIND & ( 1 << IN_LIGHT ) ) ? 1 : 0;
+
+        if(  ((PINB & 1<<IN_JOYSTICK_LEFT) ? 1: 0)  \
+           && ((PINC & 1<<IN_JOYSTICK_RIGHT) ? 1: 0) \
+           && ((PINC & 1<<IN_JOYSTICK_UP) ? 1: 0)\
+           && ((PINB & 1<<IN_JOYSTICK_DOWN) ? 1: 0)){
+            allOff();
         }
-        while (!light_sensor);
-    
-        compressorOn();
-        
-        // Check for MOTOR_END before starting the motor
-        motor_end  = ( PIND & ( 1 << IN_MOTOR_END ) ) ? 0 : 1;
-        if(!motor_end){
-            do {
-                // Keep turning the motor untill we reach the end
-                motorTurn(LEFT);
-                _delay_ms(10);
-                motor_end  = ( PIND & ( 1 << IN_MOTOR_END ) ) ? 0 : 1;
+        else {
+            if( (PINB & (1<<IN_JOYSTICK_LEFT)) ? 0: 1 ) {
+                motorXturn(LEFT);
             }
-            while (!motor_end);
-        }
-        motorOff();
-        
-        // Now we can pickup the woodblock at this position
-        hefboomDown();
-        _delay_ms(200);
-            
-        vacuumOn();
-        _delay_ms(400);
-            
-        hefboomUp();
-        _delay_ms(300);
-        
-        // motorTurnSteps(RIGHT, 5);
-        motorTurn(RIGHT);
-        _delay_ms(460); // Had issues with counting the impulses; this is more stable.
-        motorOff();
-        
-        // We have arrived at the color sensor
-        hefboomDown();
-        _delay_ms(2000);
-        
-        detected_color = readColorSensor();
-        
-        hefboomUp();
-        _delay_ms(400);
-      
-        switch(detected_color){
-            case RED:
-                motorTurnSteps(RIGHT,8);
-                hefboomDown();
-                _delay_ms(400);
-                break;
-            case WHITE:
-                _delay_ms(400);
-                motorTurnSteps(RIGHT,6);
-                hefboomDown();
-                _delay_ms(400);
-                break;
-            case BLUE:
-                motorTurnSteps(RIGHT,4);
-                hefboomDown();
-                _delay_ms(400);
-                break;
-            default:
-                hefboomDown();
-                _delay_ms(400);
-                break;
+            if((PINC & (1<<IN_JOYSTICK_RIGHT)) ? 0: 1) {
+                motorXturn(RIGHT);
+            }
+            if((PINC & (1<<IN_JOYSTICK_UP)) ? 0: 1) {
+                motorYturn(UP);
+            }
+            if((PINB & (1<<IN_JOYSTICK_DOWN)) ? 0: 1) {
+                motorYturn(DOWN);
+            }
         }
         
-        vacuumOff();
-        _delay_ms(80);
-        
-        hefboomUp();
-        _delay_ms(300);
-        compressorOff();
-        
-        allOff();
+        if(readPotMeter() > (1024/)
     }
 }
+
+#if 0
+        // X-as
+        motorXturn(LEFT);
+        _delay_ms(500);
+        motorXturn(RIGHT);
+        _delay_ms(500);
+        motorXoff();
+      
+        // Y-as
+        motorYturn(UP);
+        _delay_ms(500);
+        motorYturn(DOWN);
+        _delay_ms(500);
+        motorYoff();
+        
+        // Z-as
+        motorZturn(IN);
+        _delay_ms(500);
+        motorZturn(OUT);
+        _delay_ms(500);
+        motorZoff();
+     
+#endif
 /* EOF */
