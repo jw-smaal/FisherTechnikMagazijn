@@ -50,7 +50,6 @@ void motorTurnSteps(int direction, int steps){
 
 uint8_t joystickState(void)
 {
-    
     if(  ((PINB & 1<<IN_JOYSTICK_LEFT) ? 1: 0)   \
        && ((PINC & 1<<IN_JOYSTICK_RIGHT) ? 1: 0) \
        && ((PINC & 1<<IN_JOYSTICK_UP) ? 1: 0)    \
@@ -126,9 +125,6 @@ void motorZoff(void)
 {
     PORTB &= ~((1<<OUT_MOTOR_Z1) | (1<<OUT_MOTOR_Z2));
 }
-
-
-
 
 
 void ledOn(void)
