@@ -4,7 +4,7 @@
 ## Jan-Willem Smaal <jws@gispen.org>
 ############################################
 PRG	= main
-OBJ = main.o fishertechnikmodel.o
+OBJ = main.o FisherTechnikMagazijnModel.o
 
 # Xcode needs the full path....
 AVRTOOLS_PATH = /opt/local/bin
@@ -34,7 +34,7 @@ $(PRG).elf: $(OBJ)
 
 # dependency:
 main.o: main.c
-fishertechnikmodel.o: fishertechnikmodel.c
+FisherTechnikMagazijnModel.o: FisherTechnikMagazijnModel.c
 
 clean:
 	rm -rf *.o $(PRG).elf *.eps *.png *.pdf *.bak $(PRG).bin $(PRG).hex $(PRG).srec

@@ -1,11 +1,7 @@
 /**
  *******************************************************************
  * $Id:$
- * FISHERTECHNIK model 2: PNEUMATIC
- *
- * Sorts woodblocks based on colour. Uses TIMER, ADC and digital 
- * I/O driving solenoid pneumatic valves, motor.  Sensors: switches
- * and phototransistors.
+ * FISHERTECHNIK model 
  *
  * Jan-Willem Smaal <jws@gispen.org> 22 Nov 2013
  *******************************************************************
@@ -19,7 +15,7 @@
 #include <util/delay.h>
 
 /* Implementation of fishertechnik model */
-#include "fishertechnikmodel.h"
+#include "FisherTechnikMagazijnModel.h"
 
 
 void main(void) __attribute__((noreturn));

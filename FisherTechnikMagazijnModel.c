@@ -1,13 +1,9 @@
 /**
  *******************************************************************
  * $Id:$
- * FISHERTECHNIK model 2: PNEUMATIC
+ * FISHERTECHNIK model: Magazijn Robot 
  *
- * Sorts woodblocks based on colour. Uses TIMER, ADC and digital 
- * I/O driving solenoid pneumatic valves, motor.  Sensors: switches
- * and phototransistors.
- *
- * Jan-Willem Smaal <jws@gispen.org> 22 Nov 2013
+ * Jan-Willem Smaal <jws@gispen.org> 12 Jan 2014
  *******************************************************************
  */
 #include <inttypes.h>
@@ -17,7 +13,7 @@
 #define F_CPU 1000000UL
 #include <util/delay.h>
 
-#include "fishertechnikmodel.h"
+#include "FisherTechnikMagazijnModel.h"
 
 /**
  *******************************************************************
