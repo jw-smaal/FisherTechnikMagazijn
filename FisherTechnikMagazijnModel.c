@@ -62,11 +62,11 @@ void motorXturn(int direction)
 
 void motorYturn(int direction)
 {
-    if(direction == LEFT) {
+    if(direction == UP) {
         PORTB &= ~(1<<OUT_MOTOR_Y2);
         PORTD |= (1<<OUT_MOTOR_Y1);
     }
-    else {  // Right
+    else {  // DOWN
         PORTD &= ~(1<<OUT_MOTOR_Y1);
         PORTB |= (1<<OUT_MOTOR_Y2);
     }
@@ -75,11 +75,11 @@ void motorYturn(int direction)
 
 void motorZturn(int direction)
 {
-    if(direction == LEFT) {
+    if(direction == IN) {
         PORTB &= ~(1<<OUT_MOTOR_Z2);
         PORTB |= (1<<OUT_MOTOR_Z1);
     }
-    else {  // Right
+    else {  // OUT
         PORTB &= ~(1<<OUT_MOTOR_Z1);
         PORTB |= (1<<OUT_MOTOR_Z2);
     }

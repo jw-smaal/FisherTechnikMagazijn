@@ -45,7 +45,7 @@ void init_mcu(void)
      * 1MHz clock / 64 = 15,625 KHz
      * 16bit TCNT1 counter overflows every (15,625 KHz/65535) = 0.23 times per second.
      */
-    TCCR1B |= ( (1<<CS10) | (1<<CS11) ); // Use prescale divided by 64.
+    //TCCR1B |= ( (1<<CS10) | (1<<CS11) ); // Use prescale divided by 64.
     
     /*
      * INIT ADC
@@ -77,6 +77,7 @@ void init_mcu(void)
  */
 void main(void)
 {
+    uint16_t potmeter= 0;
     
     init_mcu();
     
@@ -87,7 +88,8 @@ void main(void)
            && ((PINC & 1<<IN_JOYSTICK_RIGHT) ? 1: 0) \
            && ((PINC & 1<<IN_JOYSTICK_UP) ? 1: 0)\
            && ((PINB & 1<<IN_JOYSTICK_DOWN) ? 1: 0)){
-            allOff();
+            motorXoff();
+            motorYoff();
         }
         else {
             if( (PINB & (1<<IN_JOYSTICK_LEFT)) ? 0: 1 ) {
@@ -103,12 +105,26 @@ void main(void)
                 motorYturn(DOWN);
             }
         }
+
+        potmeter = readPotMeter();
+        if(potmeter < ((1024/5) * 1.00)){
+            motorZturn(IN);
+        }
+     
+        else if( ( potmeter > ((1024/5) * 1.00) ) &&
+                 ( potmeter <= ((1024/5) * 4.00) )) {
+            motorZoff();
+        }
+     
+        else if( potmeter > ((1024/5) * 4.00) ){
+            motorZturn(OUT);
+            
+        }
         
-        if(readPotMeter() > (1024/)
     }
 }
 
-#if 0
+#if 0 // DEBUG
         // X-as
         motorXturn(LEFT);
         _delay_ms(500);
