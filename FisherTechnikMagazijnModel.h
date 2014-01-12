@@ -34,12 +34,21 @@
 
 
 /* Program Constants */
-#define LEFT 0 
+// For the Motors
+#define LEFT 0
 #define RIGHT 1
 #define UP 0
 #define DOWN 1
 #define IN 0
 #define OUT 1
+
+// For the Joystick INPUT state
+#define JOYSTICK_STATE_CENTRE 0x01
+#define JOYSTICK_STATE_LEFT 0x02
+#define JOYSTICK_STATE_RIGHT 0x03
+#define JOYSTICK_STATE_UP 0x04
+#define JOYSTICK_STATE_DOWN 0x05
+
 
 
 /**
@@ -54,6 +63,7 @@ void motorXoff(void);
 void motorYoff(void);
 void motorZoff(void);
 void motorTurnSteps(int direction, int steps);
+uint8_t joystickState(void);
 void ledOn(void);
 void ledOff(void);
 uint16_t readPotMeter(void);

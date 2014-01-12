@@ -55,7 +55,6 @@ void init_mcu(void)
     ADMUX = 0x00;
     
     
-    
 #if 0
     // This ledsequence is to indicate power-on-reset.
     allOff();
@@ -83,68 +82,45 @@ void main(void)
     
     // main run loop never exit!
     while(1) {
-
-        if(  ((PINB & 1<<IN_JOYSTICK_LEFT) ? 1: 0)  \
-           && ((PINC & 1<<IN_JOYSTICK_RIGHT) ? 1: 0) \
-           && ((PINC & 1<<IN_JOYSTICK_UP) ? 1: 0)\
-           && ((PINB & 1<<IN_JOYSTICK_DOWN) ? 1: 0)){
+        switch(joystickState()){
+        case JOYSTICK_STATE_CENTRE:
             motorXoff();
             motorYoff();
-        }
-        else {
-            if( (PINB & (1<<IN_JOYSTICK_LEFT)) ? 0: 1 ) {
-                motorXturn(LEFT);
-            }
-            if((PINC & (1<<IN_JOYSTICK_RIGHT)) ? 0: 1) {
-                motorXturn(RIGHT);
-            }
-            if((PINC & (1<<IN_JOYSTICK_UP)) ? 0: 1) {
-                motorYturn(UP);
-            }
-            if((PINB & (1<<IN_JOYSTICK_DOWN)) ? 0: 1) {
-                motorYturn(DOWN);
-            }
+                break;
+        case JOYSTICK_STATE_LEFT:
+            motorXturn(LEFT);
+                break;
+        case JOYSTICK_STATE_RIGHT:
+            motorXturn(RIGHT);
+                break;
+        case JOYSTICK_STATE_UP:
+            motorYturn(UP);
+                break;
+        case JOYSTICK_STATE_DOWN:
+            motorYturn(DOWN);
+                break;
+        default:
+            motorXoff();
+            motorYoff();
+            break;
         }
 
+        // Move Z-axis based on Potmeter reading.
         potmeter = readPotMeter();
         if(potmeter < ((1024/5) * 1.00)){
             motorZturn(IN);
         }
-     
         else if( ( potmeter > ((1024/5) * 1.00) ) &&
                  ( potmeter <= ((1024/5) * 4.00) )) {
             motorZoff();
         }
-     
         else if( potmeter > ((1024/5) * 4.00) ){
             motorZturn(OUT);
             
         }
         
-    }
+    } /* End of while(1) loop */
+
 }
 
-#if 0 // DEBUG
-        // X-as
-        motorXturn(LEFT);
-        _delay_ms(500);
-        motorXturn(RIGHT);
-        _delay_ms(500);
-        motorXoff();
-      
-        // Y-as
-        motorYturn(UP);
-        _delay_ms(500);
-        motorYturn(DOWN);
-        _delay_ms(500);
-        motorYoff();
-        
-        // Z-as
-        motorZturn(IN);
-        _delay_ms(500);
-        motorZturn(OUT);
-        _delay_ms(500);
-        motorZoff();
-     
-#endif
 /* EOF */

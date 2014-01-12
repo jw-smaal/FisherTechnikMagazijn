@@ -47,6 +47,32 @@ void motorTurnSteps(int direction, int steps){
     //motorOff();
 }
 
+
+uint8_t joystickState(void)
+{
+    
+    if(  ((PINB & 1<<IN_JOYSTICK_LEFT) ? 1: 0)   \
+       && ((PINC & 1<<IN_JOYSTICK_RIGHT) ? 1: 0) \
+       && ((PINC & 1<<IN_JOYSTICK_UP) ? 1: 0)    \
+       && ((PINB & 1<<IN_JOYSTICK_DOWN) ? 1: 0) ){
+        return JOYSTICK_STATE_CENTRE;
+    }
+    else if ( (PINB & (1<<IN_JOYSTICK_LEFT)) ? 0: 1 ) {
+        return JOYSTICK_STATE_LEFT;
+    }
+    else if((PINC & (1<<IN_JOYSTICK_RIGHT)) ? 0: 1) {
+        return JOYSTICK_STATE_RIGHT;
+    }
+    else if((PINC & (1<<IN_JOYSTICK_UP)) ? 0: 1) {
+        return JOYSTICK_STATE_UP;
+    }
+    else if((PINB & (1<<IN_JOYSTICK_DOWN)) ? 0: 1) {
+        return JOYSTICK_STATE_DOWN;
+    }
+    return JOYSTICK_STATE_CENTRE;
+}
+
+
 void motorXturn(int direction)
 {
     if(direction == LEFT) {
@@ -100,6 +126,9 @@ void motorZoff(void)
 {
     PORTB &= ~((1<<OUT_MOTOR_Z1) | (1<<OUT_MOTOR_Z2));
 }
+
+
+
 
 
 void ledOn(void)
