@@ -41,6 +41,51 @@ void allOff()
 }
 
 
+
+void moveToPickUpPoint()
+{
+    uint8_t xlimitreached = 0;
+    uint8_t ylimitreached = 0;
+    uint8_t positionreached = 0;
+  
+    
+    while((PINC & 1<<IN_Z_AXIS_IN) ? 1: 0){
+        motorZturn(IN);
+    }
+    motorZoff();
+    
+    xlimitreached = (PINC & 1<<IN_X_AXIS_LIMIT) ? 0: 1;
+    ylimitreached = (PIND & 1<<IN_Y_AXIS_LIMIT) ? 0: 1;
+    positionreached = xlimitreached && ylimitreached;
+    
+    while(!positionreached){
+        if(!xlimitreached) {
+            motorXturn(RIGHT);
+        }
+        else {
+            motorXoff();
+        }
+        
+        if(!ylimitreached){
+            motorYturn(DOWN);
+        }
+        else {
+            motorYoff();
+        }
+        xlimitreached = (PINC & 1<<IN_X_AXIS_LIMIT) ? 0: 1;
+        ylimitreached = (PIND & 1<<IN_Y_AXIS_LIMIT) ? 0: 1;
+        positionreached = xlimitreached && ylimitreached;
+    }
+    
+    // Move Z as to pickup position
+    while((PINC & 1<<IN_Z_AXIS_OUT) ? 1: 0){
+        motorZturn(OUT);
+    }
+    motorZoff();
+    allOff();
+}
+
+
 void motorTurnSteps(int direction, int steps){
     //motorXturn(direction);
     //motorCountSteps(steps);

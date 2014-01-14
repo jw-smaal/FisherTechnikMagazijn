@@ -31,6 +31,13 @@
 #define IN_JOYSTICK_RIGHT PC2
 #define IN_JOYSTICK_UP PC1
 #define IN_JOYSTICK_DOWN PB5
+/* INPUT:  Switches and sensors */
+#define IN_Z_AXIS_OUT PC3
+#define IN_Z_AXIS_IN PC4
+#define IN_X_AXIS_LIMIT PC5  
+#define IN_Y_AXIS_LIMIT PD2 
+#define IN_PULSE_MOTOR_X PD4
+/* #define IN_PULSE_MOTOR_Y PD5 // Incorrect!!! overlaps with output */
 
 
 /* Program Constants */
@@ -56,6 +63,7 @@
  */
 void flashntimes(int n);
 void allOff(void);
+void moveToPickUpPoint();
 void motorXturn(int direction);
 void motorYturn(int direction);
 void motorZturn(int direction);

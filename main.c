@@ -30,15 +30,21 @@ void init_mcu(void)
     /*
      * INIT data direction register:
      */
+    // Outputs
     DDRB =  (1<<OUT_MOTOR_Y2) | (1<<OUT_MOTOR_Z1) | (1<<OUT_MOTOR_Z2);
+    // Inputs
     DDRB &= ~((1<<IN_JOYSTICK_LEFT) | (1<<IN_JOYSTICK_DOWN));
-    DDRC &= ~( (1<<IN_POTMETER) | (1<<IN_JOYSTICK_UP) | (1<<IN_JOYSTICK_RIGHT) ) ;
+    DDRC &= ~( (1<<IN_POTMETER) | (1<<IN_JOYSTICK_UP) | (1<<IN_JOYSTICK_RIGHT) |\
+               (1<<IN_Z_AXIS_OUT) | (1<<IN_Z_AXIS_IN) | (1<<IN_X_AXIS_LIMIT)) ;
+    DDRD &= ~((1<<IN_Y_AXIS_LIMIT) | (1<<IN_PULSE_MOTOR_X) );
+    // Outputs
     DDRD =  (1<<OUT_MOTOR_X1) | (1<<OUT_MOTOR_X2) | (1<<OUT_MOTOR_Y1) | (1<<OUT_LED);
     
-    
+    // Enable pullups ; note no pull-up on ADC input!
     PORTB = (1<<IN_JOYSTICK_LEFT) | (1<<IN_JOYSTICK_DOWN) ;
-    PORTC = (1<<IN_JOYSTICK_UP) | (1<<IN_JOYSTICK_RIGHT) ;  // Note: no pull-up on ADC-input!
-    PORTD = 0;
+    PORTC = (1<<IN_JOYSTICK_UP) | (1<<IN_JOYSTICK_RIGHT) | (1<<IN_Z_AXIS_OUT) | \
+            (1<<IN_Z_AXIS_IN) | (1<<IN_X_AXIS_LIMIT);
+    PORTD = (1<<IN_Y_AXIS_LIMIT) | (1<<IN_PULSE_MOTOR_X);
     
     /*
      * INIT timer registers:
@@ -56,16 +62,20 @@ void init_mcu(void)
     
     
 #if 0
-    // This ledsequence is to indicate power-on-reset.
+    // This sequence is to indicate power-on-reset.
     allOff();
-    for(i = 0; i < 5; i++){
-        ledOn();
-        _delay_ms(100);
-        ledOff();
-        _delay_ms(100);
-    }
-#endif 
+//    motorXturn(LEFT);
+//    motorYturn(UP);
+    motorZturn(OUT);
+    _delay_ms(300);
     
+    //motorXturn(RIGHT);
+    //motorYturn(DOWN);
+    motorZturn(IN);
+    _delay_ms(300);
+    allOff();
+#endif
+    moveToPickUpPoint();
 }
 
 
