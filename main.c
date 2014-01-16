@@ -41,6 +41,7 @@ ISR(TIMER0_COMPA_vect)
 }
 
 // Pint Change Interrupt 0 (pin PB0) fires every pulse (320Hz pulse)
+// So we must do the compare (75 pulses == one rotation) ourselves
 ISR(PCINT0_vect)
 {
     globalYpulsesActual++;
@@ -97,7 +98,7 @@ void init_mcu(void)
                    (1<<CS02) | (1<<CS01)  | (1<<CS00));
     // Set the following
     TCCR0B |= (1<<CS02) | (1<<CS01);    // Clock on T0 pin (falling-edge)
-    OCR0A = 75;                         // (one rotation fire's an interrupt)
+    OCR0A = 75;                         // One  motor rotation causes a CTC match
     TIMSK0 |= (1<<OCIE0A);              // Output compare fires an interrupt
     globalXpulses = 0;
 
@@ -106,8 +107,11 @@ void init_mcu(void)
     /** 
      * INIT pin change interrupts
      */
+    EICRA |= (1<<ISC01); // falling edge INT0
+    EIMSK |= (1<<INT0); // Enable INT0
+    PCICR |= (1<<PCIE0); // Pin change Interrupt enable
+    PCMSK0 |= (1<<PCINT0); // Pin Change MASK only on int0
     
-       
     
     /**
      * INIT ADC

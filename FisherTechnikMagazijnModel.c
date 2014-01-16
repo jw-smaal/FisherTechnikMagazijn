@@ -133,10 +133,10 @@ void motorXmoveToPosition(uint8_t position)
 void motorYmoveToPosition(uint8_t position)
 {
     if (globalYposition < position){
-        motorYturnSteps(DOWN, position - globalYposition);
+        motorYturnSteps(UP, position - globalYposition);
     }
     else if (globalYposition > position){
-        motorYturnSteps(UP, globalYposition - position);
+        motorYturnSteps(DOWN, globalYposition - position);
     }
     else {
         // do nothing i.e. position was already reached
