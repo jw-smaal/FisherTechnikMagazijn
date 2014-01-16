@@ -18,7 +18,40 @@
 #include "FisherTechnikMagazijnModel.h"
 
 
+/**
+ * Prototypes
+ */
 void main(void) __attribute__((noreturn));
+void init_mcu(void);
+
+
+
+
+
+/**
+ *******************************************************************
+ * Interrupt Service routines
+ *******************************************************************
+ */
+// TIMER0 compare match with OCR0A fires every 75 pulses
+ISR(TIMER0_COMPA_vect)
+{
+    //ledToggle();
+    globalXpulses++;  // defined in the model.h
+}
+
+// Pint Change Interrupt 0 (pin PB0) fires every pulse (320Hz pulse)
+ISR(PCINT0_vect)
+{
+    globalYpulsesActual++;
+    if(globalYpulsesActual >= 75){
+        ledToggle();
+        globalYpulses++;
+        globalYpulsesActual = 0;
+    }
+}
+
+
 
 /**
  *******************************************************************
@@ -27,16 +60,19 @@ void main(void) __attribute__((noreturn));
  */
 void init_mcu(void)
 {
-    /*
+    int i;
+    
+    /**
      * INIT data direction register:
      */
     // Outputs
     DDRB =  (1<<OUT_MOTOR_Y2) | (1<<OUT_MOTOR_Z1) | (1<<OUT_MOTOR_Z2);
     // Inputs
-    DDRB &= ~((1<<IN_JOYSTICK_LEFT) | (1<<IN_JOYSTICK_DOWN));
+    DDRB &= ~((1<<IN_JOYSTICK_LEFT) | (1<<IN_JOYSTICK_DOWN) | (1<<IN_PULSE_MOTOR_Y));
     DDRC &= ~( (1<<IN_POTMETER) | (1<<IN_JOYSTICK_UP) | (1<<IN_JOYSTICK_RIGHT) |\
                (1<<IN_Z_AXIS_OUT) | (1<<IN_Z_AXIS_IN) | (1<<IN_X_AXIS_LIMIT)) ;
     DDRD &= ~((1<<IN_Y_AXIS_LIMIT) | (1<<IN_PULSE_MOTOR_X) );
+    
     // Outputs
     DDRD =  (1<<OUT_MOTOR_X1) | (1<<OUT_MOTOR_X2) | (1<<OUT_MOTOR_Y1) | (1<<OUT_LED);
     
@@ -44,16 +80,36 @@ void init_mcu(void)
     PORTB = (1<<IN_JOYSTICK_LEFT) | (1<<IN_JOYSTICK_DOWN) ;
     PORTC = (1<<IN_JOYSTICK_UP) | (1<<IN_JOYSTICK_RIGHT) | (1<<IN_Z_AXIS_OUT) | \
             (1<<IN_Z_AXIS_IN) | (1<<IN_X_AXIS_LIMIT);
-    PORTD = (1<<IN_Y_AXIS_LIMIT) | (1<<IN_PULSE_MOTOR_X);
     
-    /*
+    // PORTD = (1<<IN_Y_AXIS_LIMIT) | (1<<IN_PULSE_MOTOR_X); // Don't think you can use the T0 with pull-up
+    PORTD = (1<<IN_Y_AXIS_LIMIT);
+    
+    
+    /**
      * INIT timer registers:
-     * 1MHz clock / 64 = 15,625 KHz
-     * 16bit TCNT1 counter overflows every (15,625 KHz/65535) = 0.23 times per second.
+     * 1MHz clock (internal RC oscillator)
      */
-    //TCCR1B |= ( (1<<CS10) | (1<<CS11) ); // Use prescale divided by 64.
+    // Reset everything
+    TIMSK0 &= ~( (1<<OCIE0B) | (1<<OCIE0A) | (1<<TOIE0) );
+    TCCR0A &= ~( (1<<COM0A1) | (1<<COM0A0) | (1<<COM0B1) | (1<<COM0B0) | \
+                  (1<<WGM01)  | (1<<WGM00) );
+    TCCR0B &= ~( (1<<FOC0A) | (1<<FOC0B) | (1<<WGM02) | \
+                   (1<<CS02) | (1<<CS01)  | (1<<CS00));
+    // Set the following
+    TCCR0B |= (1<<CS02) | (1<<CS01);    // Clock on T0 pin (falling-edge)
+    OCR0A = 75;                         // (one rotation fire's an interrupt)
+    TIMSK0 |= (1<<OCIE0A);              // Output compare fires an interrupt
+    globalXpulses = 0;
+
     
-    /*
+    
+    /** 
+     * INIT pin change interrupts
+     */
+    
+       
+    
+    /**
      * INIT ADC
      */
     ADCSRA |= (1<<ADEN);
@@ -61,21 +117,23 @@ void init_mcu(void)
     ADMUX = 0x00;
     
     
-#if 0
-    // This sequence is to indicate power-on-reset.
-    allOff();
-//    motorXturn(LEFT);
-//    motorYturn(UP);
-    motorZturn(OUT);
-    _delay_ms(300);
+    // Set Enable Interrupts
+    sei();
     
-    //motorXturn(RIGHT);
-    //motorYturn(DOWN);
-    motorZturn(IN);
-    _delay_ms(300);
-    allOff();
-#endif
+    /**
+     * Put the model into the right starting position
+     */
     moveToPickUpPoint();
+    flashntimes(2);
+#if 0
+    moveZin();
+    for(i = 0; i < 10; i++) {
+        motorYmoveToPosition(i);
+        _delay_ms(300);
+    }
+    flashntimes(3);
+    moveToPickUpPoint();
+#endif
 }
 
 
@@ -118,15 +176,24 @@ void main(void)
         // Move Z-axis based on Potmeter reading.
         potmeter = readPotMeter();
         if(potmeter < ((1024/5) * 1.00)){
-            motorZturn(IN);
+            if((PINC & 1<<IN_Z_AXIS_IN) ? 1: 0){
+                motorZturn(IN);
+            }
+            else{
+                motorZoff();
+            }
         }
         else if( ( potmeter > ((1024/5) * 1.00) ) &&
                  ( potmeter <= ((1024/5) * 4.00) )) {
             motorZoff();
         }
         else if( potmeter > ((1024/5) * 4.00) ){
-            motorZturn(OUT);
-            
+            if((PINC & 1<<IN_Z_AXIS_OUT) ? 1: 0){
+                motorZturn(OUT);
+            }
+            else {
+                motorZoff();
+            }
         }
         
     } /* End of while(1) loop */

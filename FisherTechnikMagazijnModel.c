@@ -23,12 +23,12 @@
  *******************************************************************
  */
 void flashntimes(int n){
-    int i = 0;
+    int i;
     for (i = 0; i < n; i++){
         ledOn();
-        _delay_ms(600);
+        _delay_ms(300);
         ledOff();
-        _delay_ms(400);
+        _delay_ms(200);
     }
 }
 
@@ -41,18 +41,31 @@ void allOff()
 }
 
 
-
-void moveToPickUpPoint()
+void moveZin()
 {
-    uint8_t xlimitreached = 0;
-    uint8_t ylimitreached = 0;
-    uint8_t positionreached = 0;
-  
-    
     while((PINC & 1<<IN_Z_AXIS_IN) ? 1: 0){
         motorZturn(IN);
     }
     motorZoff();
+}
+
+void moveZout()
+{
+    while((PINC & 1<<IN_Z_AXIS_OUT) ? 1: 0){
+        motorZturn(OUT);
+    }
+    motorZoff();
+}
+
+
+void moveToPickUpPoint()
+{
+    uint8_t xlimitreached;
+    uint8_t ylimitreached;
+    uint8_t positionreached;
+  
+    
+    moveZin();
     
     xlimitreached = (PINC & 1<<IN_X_AXIS_LIMIT) ? 0: 1;
     ylimitreached = (PIND & 1<<IN_Y_AXIS_LIMIT) ? 0: 1;
@@ -76,20 +89,59 @@ void moveToPickUpPoint()
         ylimitreached = (PIND & 1<<IN_Y_AXIS_LIMIT) ? 0: 1;
         positionreached = xlimitreached && ylimitreached;
     }
-    
-    // Move Z as to pickup position
-    while((PINC & 1<<IN_Z_AXIS_OUT) ? 1: 0){
-        motorZturn(OUT);
-    }
-    motorZoff();
-    allOff();
+    allOff();  // May not have reached X or Y off so...
+    moveZout();
+    globalXposition = 0;
+    globalYposition = 0;
+    //allOff();
 }
 
 
-void motorTurnSteps(int direction, int steps){
-    //motorXturn(direction);
-    //motorCountSteps(steps);
-    //motorOff();
+void motorXturnSteps(int direction, int steps){
+    globalXpulses= 0;
+    do {
+        motorXturn(direction);
+    }
+    while (globalXpulses < steps);
+    motorXoff();
+}
+
+void motorYturnSteps(int direction, int steps){
+    globalYpulses= 0;
+    do {
+        motorYturn(direction);
+    }
+    while (globalYpulses < steps);
+    motorYoff();
+}
+
+void motorXmoveToPosition(uint8_t position)
+{
+    if (globalXposition < position){
+        motorXturnSteps(LEFT, position - globalXposition);
+    }
+    else if (globalXposition > position){
+        motorXturnSteps(RIGHT, globalXposition - position);
+    }
+    else {
+        // do nothing i.e. position was already reached
+    }
+    globalXposition = position;
+}
+
+
+void motorYmoveToPosition(uint8_t position)
+{
+    if (globalYposition < position){
+        motorYturnSteps(DOWN, position - globalYposition);
+    }
+    else if (globalYposition > position){
+        motorYturnSteps(UP, globalYposition - position);
+    }
+    else {
+        // do nothing i.e. position was already reached
+    }
+    globalYposition = position;
 }
 
 
@@ -128,6 +180,7 @@ void motorXturn(int direction)
         PORTD |= (1<<OUT_MOTOR_X2);
     }
 }
+
 
 
 void motorYturn(int direction)
@@ -174,13 +227,21 @@ void motorZoff(void)
 
 void ledOn(void)
 {
-   // PORTD |= (1<<OUT_LED);
+    //PORTD |= (1<<OUT_LED);
+    PORTD &= ~(1<<OUT_LED);
 }
 
 void ledOff(void)
 {
+    PORTD |= (1<<OUT_LED);
     //PORTD &= ~(1<<OUT_LED);
 }
+
+void ledToggle(void)
+{
+    PORTD ^= (1<<OUT_LED);
+}
+
 
 /**
  * Potmeter ADC conversion

@@ -23,7 +23,7 @@
 #define OUT_MOTOR_Y2 PB3
 #define OUT_MOTOR_Z1 PB2
 #define OUT_MOTOR_Z2 PB1
-#define OUT_LED PD3
+#define OUT_LED PD0
 
 /* INPUTS */
 #define IN_POTMETER PC0
@@ -38,6 +38,7 @@
 #define IN_Y_AXIS_LIMIT PD2 
 #define IN_PULSE_MOTOR_X PD4
 /* #define IN_PULSE_MOTOR_Y PD5 // Incorrect!!! overlaps with output */
+#define IN_PULSE_MOTOR_Y PB0 // Using Pin Change Interrupt counting
 
 
 /* Program Constants */
@@ -56,6 +57,14 @@
 #define JOYSTICK_STATE_UP 0x04
 #define JOYSTICK_STATE_DOWN 0x05
 
+/**
+ * Globals modified by ISR's
+ */
+volatile uint8_t globalXpulses;
+volatile uint8_t globalXposition;
+volatile uint8_t globalYpulsesActual;
+volatile uint8_t globalYpulses;
+volatile uint8_t globalYposition;
 
 
 /**
@@ -64,16 +73,22 @@
 void flashntimes(int n);
 void allOff(void);
 void moveToPickUpPoint();
+void motorXturnSteps(int direction, int steps);
+void motorYturnSteps(int direction, int steps);
+void motorXmoveToPosition(uint8_t position);
+void motorYmoveToPosition(uint8_t position);
 void motorXturn(int direction);
 void motorYturn(int direction);
 void motorZturn(int direction);
 void motorXoff(void);
 void motorYoff(void);
 void motorZoff(void);
-void motorTurnSteps(int direction, int steps);
+void moveZin();
+void moveZout();
 uint8_t joystickState(void);
 void ledOn(void);
 void ledOff(void);
+void ledToggle(void);
 uint16_t readPotMeter(void);
 
 /* EOF */
