@@ -22,8 +22,8 @@
  * just reading/writing to memory registers.
  *******************************************************************
  */
-void flashntimes(int n){
-    int i;
+void flashntimes(uint8_t n){
+    uint8_t i;
     for (i = 0; i < n; i++){
         ledOn();
         _delay_ms(300);
@@ -92,12 +92,106 @@ void moveToPickUpPoint()
     allOff();  // May not have reached X or Y off so...
     moveZout();
     globalXposition = 0;
+    globalXpulses = 0;
     globalYposition = 0;
+    globalXpulses = 0;
+    globalYpulsesActual = 0;
     //allOff();
 }
 
+void moveToPosition(uint8_t x, uint8_t y){
+    uint8_t positionreached = 0;
+    uint8_t xoffset = 0;
+    uint8_t yoffset = 0;
+    uint8_t xdirection = NONE;
+    uint8_t ydirection = NONE;
+    
+    if (globalYposition == x && globalYposition == y){
+        return;
+    }
+    
+    while(!positionreached) {
+        /* X-axis */
+        if(globalXposition < x){
+            // move left
+            xoffset = x - globalXposition;
+            globalXpulses = 0;
+            motorXturn(LEFT);
+            xdirection = LEFT;
+        }
+        else if(globalXposition > x){
+            // Move right
+            xoffset = globalXposition - x;
+            globalXpulses = 0;
+            motorXturn(RIGHT);
+            xdirection = RIGHT;
+        }
+        else if(globalXposition == x){
+            // turn X motor off
+            xoffset = 0;
+            motorXoff();
+        }
+        
+        /* Y-axis */
+        if(globalYposition < y){
+            // move up
+            yoffset = y - globalYposition;
+            globalYpulses = 0;
+            globalYpulsesActual = 0;
+            motorYturn(UP);
+            ydirection = UP;
+        }
+        else if(globalYposition > y){
+            // Move down
+            yoffset = globalYposition - y;
+            globalYpulses = 0;
+            globalYpulsesActual = 0;
+            motorYturn(DOWN);
+            ydirection = DOWN;
+        }
+        else if(globalYposition == y){
+            // turn Y motor off
+            yoffset = 0;
+            motorYoff();
+        }
+        
+        if(xoffset!=0){
+            xoffset = xoffset - globalXpulses;
+        }
+        if(yoffset!=0){
+            yoffset = yoffset - globalYpulses;
+        }
+  
+        
+        // TODO update globalX  position !!!
+        if(xdirection == LEFT){
+            globalXposition = globalXposition + globalXpulses;
+        }
+        else if(xdirection == RIGHT){
+            globalXposition = globalXposition - globalXpulses;
+        }
+        
+        // TODO update globalY position !!!
+        if(ydirection == UP){
+            globalYposition = globalYposition + globalYpulses;
+        }
+        else if(xdirection == DOWN){
+            globalYposition = globalYposition - globalYpulses;
+        }
+        
+        // If both offsets are zero we have reach our position
+        if ((xoffset == 0) && (yoffset == 0)){
+            positionreached =1;
+            globalXposition = x;
+            globalYposition = y;
+            motorXoff();
+            motorYoff();
+        }
+    }
+}
 
-void motorXturnSteps(int direction, int steps){
+
+void motorXturnSteps(uint8_t direction, uint8_t steps){
     globalXpulses= 0;
     do {
         motorXturn(direction);
@@ -106,7 +200,7 @@ void motorXturnSteps(int direction, int steps){
     motorXoff();
 }
 
-void motorYturnSteps(int direction, int steps){
+void motorYturnSteps(uint8_t direction, uint8_t steps){
     globalYpulses= 0;
     globalYpulsesActual = 0;
     do {
@@ -170,7 +264,7 @@ uint8_t joystickState(void)
 }
 
 
-void motorXturn(int direction)
+void motorXturn(uint8_t direction)
 {
     if(direction == LEFT) {
         PORTD &= ~(1<<OUT_MOTOR_X2);
@@ -184,7 +278,7 @@ void motorXturn(int direction)
 
 
 
-void motorYturn(int direction)
+void motorYturn(uint8_t direction)
 {
     if(direction == UP) {
         PORTB &= ~(1<<OUT_MOTOR_Y2);
@@ -197,7 +291,7 @@ void motorYturn(int direction)
 }
 
 
-void motorZturn(int direction)
+void motorZturn(uint8_t direction)
 {
     if(direction == IN) {
         PORTB &= ~(1<<OUT_MOTOR_Z2);

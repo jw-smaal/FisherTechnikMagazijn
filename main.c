@@ -36,7 +36,6 @@ void init_mcu(void);
 // TIMER0 compare match with OCR0A fires every 75 pulses
 ISR(TIMER0_COMPA_vect)
 {
-    //ledToggle();
     globalXpulses++;  // defined in the model.h
 }
 
@@ -45,6 +44,7 @@ ISR(TIMER0_COMPA_vect)
 ISR(PCINT0_vect)
 {
     globalYpulsesActual++;
+    // 75*2 because PCINT is triggered on both up and down flank.
     if(globalYpulsesActual == 75*2){
         globalYpulses++;
         globalYpulsesActual = 0;
@@ -60,8 +60,6 @@ ISR(PCINT0_vect)
  */
 void init_mcu(void)
 {
-    int i;
-    
     /**
      * INIT data direction register:
      */
@@ -106,7 +104,7 @@ void init_mcu(void)
     /** 
      * INIT pin change interrupts
      */
-    EICRA |= (1<<ISC01); // falling edge INT0
+    //EICRA |= (1<<ISC01); // falling edge INT0
    // EIMSK |= (1<<INT0); // Enable INT0  mistake caused software interrupt with no ISR!!!
     PCICR |= (1<<PCIE0); // Pin change Interrupt enable
     PCMSK0 |= (1<<PCINT0); // Pin Change MASK only on int0
@@ -129,12 +127,7 @@ void init_mcu(void)
      * Put the model into the right starting position
      */
     moveToPickUpPoint();
- 
-    for(i = 1; i < 5; i++) {
-        // motorXmoveToPosition(i);
-        motorYmoveToPosition(i);
-        //_delay_ms(50);
-    }
+    
 }
 
 
@@ -145,9 +138,38 @@ void init_mcu(void)
  */
 void main(void)
 {
-    uint16_t potmeter= 0;
+    uint16_t potmeter;
+    uint8_t i;
     
     init_mcu();
+    
+    
+    /* Just some tests */
+    moveZin();
+    
+    for(i = 0; i < 10; i++){
+        moveToPosition(i, 0);
+        _delay_ms(1000);
+    }
+    
+    // Y has a problem
+  /*
+    for(i = 0; i < 10; i++){
+        moveToPosition(0, i);
+        _delay_ms(100);
+    }
+   */
+    
+    
+    
+    //moveToPosition(1,1);
+    
+    
+  //  for(i = 1; i < 20; i++) {
+   //     moveToPosition(i,i);
+   // }
+    // End of tests
+    
     
     // main run loop never exit!
     while(1) {

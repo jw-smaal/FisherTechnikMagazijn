@@ -43,6 +43,7 @@
 
 /* Program Constants */
 // For the Motors
+#define NONE 3
 #define LEFT 0
 #define RIGHT 1
 #define UP 0
@@ -70,16 +71,17 @@ volatile uint8_t globalYposition;
 /**
  * Prototypes:
  */
-void flashntimes(int n);
+void flashntimes(uint8_t n);
 void allOff(void);
 void moveToPickUpPoint();
-void motorXturnSteps(int direction, int steps);
-void motorYturnSteps(int direction, int steps);
+void motorXturnSteps(uint8_t direction, uint8_t steps);
+void motorYturnSteps(uint8_t direction, uint8_t steps);
 void motorXmoveToPosition(uint8_t position);
 void motorYmoveToPosition(uint8_t position);
-void motorXturn(int direction);
-void motorYturn(int direction);
-void motorZturn(int direction);
+void moveToPosition(uint8_t x, uint8_t y);
+void motorXturn(uint8_t direction);
+void motorYturn(uint8_t direction);
+void motorZturn(uint8_t direction);
 void motorXoff(void);
 void motorYoff(void);
 void motorZoff(void);
