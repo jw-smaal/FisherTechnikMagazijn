@@ -108,6 +108,7 @@ void motorXturnSteps(int direction, int steps){
 
 void motorYturnSteps(int direction, int steps){
     globalYpulses= 0;
+    globalYpulsesActual = 0;
     do {
         motorYturn(direction);
     }

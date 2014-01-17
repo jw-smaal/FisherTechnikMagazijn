@@ -45,8 +45,7 @@ ISR(TIMER0_COMPA_vect)
 ISR(PCINT0_vect)
 {
     globalYpulsesActual++;
-    if(globalYpulsesActual >= 75){
-        ledToggle();
+    if(globalYpulsesActual == 75*2){
         globalYpulses++;
         globalYpulsesActual = 0;
     }
@@ -108,9 +107,11 @@ void init_mcu(void)
      * INIT pin change interrupts
      */
     EICRA |= (1<<ISC01); // falling edge INT0
-    EIMSK |= (1<<INT0); // Enable INT0
+   // EIMSK |= (1<<INT0); // Enable INT0  mistake caused software interrupt with no ISR!!!
     PCICR |= (1<<PCIE0); // Pin change Interrupt enable
     PCMSK0 |= (1<<PCINT0); // Pin Change MASK only on int0
+    globalYpulsesActual = 0;
+    globalYpulses = 0;
     
     
     /**
@@ -128,20 +129,16 @@ void init_mcu(void)
      * Put the model into the right starting position
      */
     moveToPickUpPoint();
-    flashntimes(2);
-#if 0
-    moveZin();
-    for(i = 0; i < 10; i++) {
+ 
+    for(i = 1; i < 5; i++) {
+        // motorXmoveToPosition(i);
         motorYmoveToPosition(i);
-        _delay_ms(300);
+        //_delay_ms(50);
     }
-    flashntimes(3);
-    moveToPickUpPoint();
-#endif
 }
 
 
-/** 
+/**
  *******************************************************************
  * main run loop; never exits!
  *******************************************************************
