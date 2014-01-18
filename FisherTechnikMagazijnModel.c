@@ -94,7 +94,7 @@ void moveToPickUpPoint()
     globalXposition = 0;
     globalXpulses = 0;
     globalYposition = 0;
-    globalXpulses = 0;
+    globalYpulses = 0;
     globalYpulsesActual = 0;
     //allOff();
 }
@@ -109,20 +109,24 @@ void moveToPosition(uint8_t x, uint8_t y){
     if (globalYposition == x && globalYposition == y){
         return;
     }
+
+    globalXpulses = 0;
+    globalYpulses = 0;
+    globalYpulsesActual = 0;
+    
     
     while(!positionreached) {
         /* X-axis */
         if(globalXposition < x){
             // move left
             xoffset = x - globalXposition;
-            globalXpulses = 0;
             motorXturn(LEFT);
             xdirection = LEFT;
         }
         else if(globalXposition > x){
             // Move right
             xoffset = globalXposition - x;
-            globalXpulses = 0;
+           /// globalXpulses = 0;
             motorXturn(RIGHT);
             xdirection = RIGHT;
         }
@@ -136,16 +140,16 @@ void moveToPosition(uint8_t x, uint8_t y){
         if(globalYposition < y){
             // move up
             yoffset = y - globalYposition;
-            globalYpulses = 0;
-            globalYpulsesActual = 0;
+           /// globalYpulses = 0;
+           /// globalYpulsesActual = 0;
             motorYturn(UP);
             ydirection = UP;
         }
         else if(globalYposition > y){
             // Move down
             yoffset = globalYposition - y;
-            globalYpulses = 0;
-            globalYpulsesActual = 0;
+            //globalYpulses = 0;
+            //globalYpulsesActual = 0;
             motorYturn(DOWN);
             ydirection = DOWN;
         }

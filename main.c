@@ -148,17 +148,15 @@ void main(void)
     moveZin();
     
     for(i = 0; i < 10; i++){
-        moveToPosition(i, 0);
+        moveToPosition(i, i);
         _delay_ms(1000);
     }
     
-    // Y has a problem
-  /*
-    for(i = 0; i < 10; i++){
-        moveToPosition(0, i);
-        _delay_ms(100);
+    for(i = 10; i > 0; i--){
+        moveToPosition(i, i);
+        _delay_ms(1000);
     }
-   */
+    
     
     
     
