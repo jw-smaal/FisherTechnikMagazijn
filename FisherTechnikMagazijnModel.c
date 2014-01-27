@@ -124,11 +124,20 @@ void moveToPosition(uint8_t x, uint8_t y){
             xdirection = LEFT;
         }
         else if(globalXposition > x){
-            // Move right
-            xoffset = globalXposition - x;
-           /// globalXpulses = 0;
-            motorXturn(RIGHT);
-            xdirection = RIGHT;
+            if(!(PINC & 1<<IN_X_AXIS_LIMIT)){
+                // We have reached the x-limit
+                globalXposition = 0;
+                globalXpulses = 0;
+                xoffset = 0;
+                motorXoff();
+                xdirection = NONE;
+            }
+            else {
+                // Move right
+                xoffset = globalXposition - x;
+                motorXturn(RIGHT);
+                xdirection = RIGHT;
+            }
         }
         else if(globalXposition == x){
             // turn X motor off
@@ -140,18 +149,24 @@ void moveToPosition(uint8_t x, uint8_t y){
         if(globalYposition < y){
             // move up
             yoffset = y - globalYposition;
-           /// globalYpulses = 0;
-           /// globalYpulsesActual = 0;
             motorYturn(UP);
             ydirection = UP;
         }
         else if(globalYposition > y){
-            // Move down
-            yoffset = globalYposition - y;
-            //globalYpulses = 0;
-            //globalYpulsesActual = 0;
-            motorYturn(DOWN);
-            ydirection = DOWN;
+            if(!(PIND & 1<<IN_Y_AXIS_LIMIT)){
+                globalYposition = 0;
+                globalYpulses = 0;
+                globalYpulsesActual = 0;
+                yoffset = 0;
+                motorYoff();
+                xdirection = NONE;
+            }
+            else {
+                // Move down; Check for IN_Y_AXIS_LIMIT
+                yoffset = globalYposition - y;
+                motorYturn(DOWN);
+                ydirection = DOWN;
+            }
         }
         else if(globalYposition == y){
             // turn Y motor off
@@ -166,7 +181,7 @@ void moveToPosition(uint8_t x, uint8_t y){
             yoffset = yoffset - globalYpulses;
         }
   
-        
+        // FIXME!!!! 
         // TODO update globalX  position !!!
         if(xdirection == LEFT){
             globalXposition = globalXposition + globalXpulses;

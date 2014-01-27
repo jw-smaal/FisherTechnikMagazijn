@@ -146,26 +146,43 @@ void main(void)
     
     /* Just some tests */
     moveZin();
-    
-    for(i = 0; i < 10; i++){
+    //moveToPosition(10,10);
+    _delay_ms(1000);
+#if 0
+    for(i = 0; i <= 10; i++){
+        moveToPosition(0, i);
+        _delay_ms(100);
+    }
+    _delay_ms(3000);
+    for(i = 10; i > 0; i--){
+        moveToPosition(0, i);
+        _delay_ms(100);
+    }
+    _delay_ms(3000);
+    for(i = 0; i <= 10; i++){
         moveToPosition(i, i);
         _delay_ms(1000);
     }
-    
+    _delay_ms(3000);
     for(i = 10; i > 0; i--){
         moveToPosition(i, i);
         _delay_ms(1000);
     }
+#endif
+    
+    //
+    moveToPosition(5,1);
+    _delay_ms(3000);
+    moveToPosition(5,2);
+    _delay_ms(3000);
+    moveToPosition(5,3);
+    _delay_ms(3000);
+    moveToPosition(5,4);
+    _delay_ms(3000);
+    moveToPosition(5,5);
+    _delay_ms(3000);
     
     
-    
-    
-    //moveToPosition(1,1);
-    
-    
-  //  for(i = 1; i < 20; i++) {
-   //     moveToPosition(i,i);
-   // }
     // End of tests
     
     
