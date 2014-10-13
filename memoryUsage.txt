@@ -1,0 +1,100 @@
+00000000 W __heap_end
+00000000 a __tmp_reg__
+00000000 a __tmp_reg__
+00000000 W __vector_default
+00000000 T __vectors
+00000001 a __zero_reg__
+00000001 a __zero_reg__
+0000003d a __SP_L__
+0000003d a __SP_L__
+0000003e a __SP_H__
+0000003e a __SP_H__
+0000003f a __SREG__
+0000003f a __SREG__
+00000068 T __ctors_end
+00000068 T __ctors_start
+00000068 T __dtors_end
+00000068 T __dtors_start
+00000068 W __init
+00000068 T __trampolines_end
+00000068 T __trampolines_start
+00000074 00000010 T __do_clear_bss
+0000007c t .do_clear_bss_loop
+0000007e t .do_clear_bss_start
+0000008c T __bad_interrupt
+0000008c W __vector_1
+0000008c W __vector_10
+0000008c W __vector_11
+0000008c W __vector_12
+0000008c W __vector_13
+0000008c W __vector_15
+0000008c W __vector_16
+0000008c W __vector_17
+0000008c W __vector_18
+0000008c W __vector_19
+0000008c W __vector_2
+0000008c W __vector_20
+0000008c W __vector_21
+0000008c W __vector_22
+0000008c W __vector_23
+0000008c W __vector_24
+0000008c W __vector_25
+0000008c W __vector_4
+0000008c W __vector_5
+0000008c W __vector_6
+0000008c W __vector_7
+0000008c W __vector_8
+0000008c W __vector_9
+00000090 00000022 T __vector_14
+000000b2 0000006a T __vector_3
+0000011c 000000cc T init_mcu
+000001e8 00000006 t motorZturn.part.2
+000001ee 00000038 T flashntimes
+00000226 00000014 T allOff
+0000023a 00000012 T moveZin
+0000024c 00000034 T joystickState
+00000280 00000010 T motorXturn
+00000290 00000032 T motorXturnSteps
+000002c2 00000052 T motorXmoveToPosition
+00000314 00000010 T motorYturn
+00000324 00000034 T motorYturnSteps
+00000358 00000052 T motorYmoveToPosition
+000003aa 0000000e T motorZturn
+000003b8 00000016 T moveZout
+000003ce 00000082 T moveToPickUpPoint
+00000450 00000008 T motorXoff
+00000458 00000006 T motorYoff
+0000045e 00000008 T motorZoff
+00000466 00000004 T ledOn
+0000046a 00000004 T ledOff
+0000046e 0000000a T ledToggle
+00000478 00000020 T readPotMeter
+00000498 000000de T main
+00000576 00000008 T __cmpsf2
+00000576 T __eqsf2
+00000576 T __lesf2
+00000576 T __ltsf2
+00000576 T __nesf2
+0000057e 0000007a T __floatunsisf
+00000582 T __floatsisf
+000005f8 00000048 T __fp_cmp
+00000640 00000008 T __gesf2
+00000640 T __gtsf2
+00000648 T _exit
+00000648 W exit
+0000064a t __stop_program
+0000064c A __data_load_end
+0000064c A __data_load_start
+0000064c T _etext
+000008ff W __stack
+00800100 B __bss_start
+00800100 D _edata
+00800100 00000001 B globalXposition
+00800101 00000001 B globalYpulses
+00800102 00000001 B globalXpulses
+00800103 00000001 B globalYpulsesActual
+00800104 00000001 B globalYposition
+00800105 B __bss_end
+00800105 B _end
+00810000 B __eeprom_end
+00840000 00000003 R __signature
