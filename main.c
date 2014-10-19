@@ -146,7 +146,7 @@ void main(void)
     
     /* Just some tests */
     moveZin();
-    //moveToPosition(10,10);
+ //   moveToPosition(10,10);
     _delay_ms(1000);
 #if 0
     for(i = 0; i <= 10; i++){
@@ -170,19 +170,18 @@ void main(void)
     }
 #endif
     
-    //
-    moveToPosition(5,1);
+#if 1
+    moveToPosition(1,1);
     _delay_ms(3000);
-    moveToPosition(5,2);
+    moveToPosition(2,2);
     _delay_ms(3000);
-    moveToPosition(5,3);
+    moveToPosition(3,3);
     _delay_ms(3000);
-    moveToPosition(5,4);
+    moveToPosition(4,4);
     _delay_ms(3000);
     moveToPosition(5,5);
     _delay_ms(3000);
-    
-    
+#endif
     // End of tests
     
     
