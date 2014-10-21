@@ -99,6 +99,17 @@ void moveToPickUpPoint()
     //allOff();
 }
 
+
+/**
+ * This function can be optimized by starting 
+ * two motors at the same time.
+ */
+void moveToPosition(uint8_t x, uint8_t y){
+    motorXmoveToPosition(x);
+    motorYmoveToPosition(y);
+}
+
+#if 0 // Broken function start osscillating !!!
 void moveToPosition(uint8_t x, uint8_t y){
     uint8_t positionreached = 0;
     uint8_t xoffset = 0;
@@ -208,6 +219,7 @@ void moveToPosition(uint8_t x, uint8_t y){
         }
     }
 }
+#endif // broken function
 
 
 void motorXturnSteps(uint8_t direction, uint8_t steps){
