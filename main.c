@@ -148,7 +148,7 @@ void main(void)
     moveZin();
     //moveToPosition(10,10);
     //_delay_ms(1000);
-#if 0
+#if 1
     for(i = 0; i <= 10; i++){
         moveToPosition(0, i);
         _delay_ms(100);
