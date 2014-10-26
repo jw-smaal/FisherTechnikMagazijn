@@ -143,12 +143,11 @@ void main(void)
     
     init_mcu();
     
+//    moveToPickUpPoint();
     
     /* Just some tests */
     moveZin();
-    //moveToPosition(10,10);
-    //_delay_ms(1000);
-#if 1
+#if 0
     for(i = 0; i <= 10; i++){
         moveToPosition(0, i);
         _delay_ms(100);
