@@ -79,6 +79,7 @@ void motorYturnSteps(uint8_t direction, uint8_t steps);
 void motorXmoveToPosition(uint8_t position);
 void motorYmoveToPosition(uint8_t position);
 void moveToPosition(uint8_t x, uint8_t y);
+void moveToPositionFast(uint8_t x, uint8_t y);
 void motorXturn(uint8_t direction);
 void motorYturn(uint8_t direction);
 void motorZturn(uint8_t direction);

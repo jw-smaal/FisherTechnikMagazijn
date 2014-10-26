@@ -109,8 +109,8 @@ void moveToPosition(uint8_t x, uint8_t y){
     motorYmoveToPosition(y);
 }
 
-#if 0 // Broken function start osscillating !!!
-void moveToPosition(uint8_t x, uint8_t y){
+// Broken function starts osscillating !!!
+void moveToPositionFast(uint8_t x, uint8_t y){
     uint8_t positionreached = 0;
     uint8_t xoffset = 0;
     uint8_t yoffset = 0;
@@ -219,7 +219,6 @@ void moveToPosition(uint8_t x, uint8_t y){
         }
     }
 }
-#endif // broken function
 
 
 void motorXturnSteps(uint8_t direction, uint8_t steps){

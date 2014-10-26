@@ -143,10 +143,10 @@ void main(void)
     
     init_mcu();
     
-//    moveToPickUpPoint();
-    
     /* Just some tests */
     moveZin();
+    
+    
 #if 0
     for(i = 0; i <= 10; i++){
         moveToPosition(0, i);
@@ -165,23 +165,45 @@ void main(void)
     _delay_ms(3000);
     for(i = 10; i > 0; i--){
         moveToPosition(i, i);
+        _delay_ms(1000);
+    }
+#endif
+#if 1
+    // X-as
+    for(i = 0; i <= 10; i++){
+        moveToPositionFast(i, 0);
+        _delay_ms(100);
+    }
+    for(i = 10; i > 0; i--){
+        moveToPositionFast(i, 0);
+        _delay_ms(100);
+    }
+    _delay_ms(3000);
+    // Y-as
+    for(i = 0; i <= 10; i++){
+        moveToPositionFast(0, i);
+        _delay_ms(100);
+    }
+    _delay_ms(3000);
+    for(i = 10; i > 0; i--){
+        moveToPositionFast(0, i);
+        _delay_ms(100);
+    }
+    _delay_ms(3000);
+    
+    // Samen
+    for(i = 0; i <= 10; i++){
+        moveToPositionFast(i, i);
+        _delay_ms(1000);
+    }
+    _delay_ms(3000);
+    for(i = 10; i > 0; i--){
+        moveToPositionFast(i, i);
         _delay_ms(1000);
     }
 #endif
     
-#if 0
-    //
-    moveToPosition(5,1);
-    _delay_ms(3000);
-    moveToPosition(5,2);
-    _delay_ms(3000);
-    moveToPosition(5,3);
-    _delay_ms(3000);
-    moveToPosition(5,4);
-    _delay_ms(3000);
-    moveToPosition(5,5);
-    _delay_ms(3000);
-#endif
+    
     
     // End of tests
     
