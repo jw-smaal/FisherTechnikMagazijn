@@ -146,8 +146,18 @@ void main(void)
     /* Just some tests */
     moveZin();
     
-    
-#if 0
+#if 1
+    // X-as
+    for(i = 0; i <= 10; i++){
+        moveToPosition(i, 0);
+        _delay_ms(100);
+    }
+    for(i = 10; i > 0; i--){
+        moveToPosition(i, 0);
+        _delay_ms(100);
+    }
+    _delay_ms(3000);
+    // Y-as
     for(i = 0; i <= 10; i++){
         moveToPosition(0, i);
         _delay_ms(100);
@@ -158,6 +168,8 @@ void main(void)
         _delay_ms(100);
     }
     _delay_ms(3000);
+    
+    // Samen
     for(i = 0; i <= 10; i++){
         moveToPosition(i, i);
         _delay_ms(1000);
@@ -168,7 +180,10 @@ void main(void)
         _delay_ms(1000);
     }
 #endif
-#if 1
+    
+    
+
+#if 0
     // X-as
     for(i = 0; i <= 10; i++){
         moveToPositionFast(i, 0);

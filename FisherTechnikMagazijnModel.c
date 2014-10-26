@@ -209,8 +209,9 @@ void moveToPositionFast(uint8_t x, uint8_t y){
             globalYposition = globalYposition - globalYpulses;
         }
         
-        // If both offsets are zero we have reach our position
+        // If both offsets are zero we have reached our position
         if ((xoffset == 0) && (yoffset == 0)){
+        //if ((xoffset <= 2 ) && (yoffset <= 2 )){
             positionreached =1;
             globalXposition = x;
             globalYposition = y;
