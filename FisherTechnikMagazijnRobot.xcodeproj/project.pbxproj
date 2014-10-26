@@ -9,6 +9,7 @@
 /* Begin PBXFileReference section */
 		2338A77818829C8A0078C0E7 /* FisherTechnikMagazijnModel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FisherTechnikMagazijnModel.c; sourceTree = "<group>"; };
 		2338A77918829C8A0078C0E7 /* FisherTechnikMagazijnModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FisherTechnikMagazijnModel.h; sourceTree = "<group>"; };
+		234A022419F3BE6E00E667CC /* 20141019 FisherTechnikMagazijnRobot_Schema.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "20141019 FisherTechnikMagazijnRobot_Schema.pdf"; sourceTree = "<group>"; };
 		23D63097185E03DB00EA1A0E /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		23D63098185E03E200EA1A0E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -17,6 +18,7 @@
 		23FDF244185E021E00CB6A2A = {
 			isa = PBXGroup;
 			children = (
+				234A022419F3BE6E00E667CC /* 20141019 FisherTechnikMagazijnRobot_Schema.pdf */,
 				2338A77818829C8A0078C0E7 /* FisherTechnikMagazijnModel.c */,
 				2338A77918829C8A0078C0E7 /* FisherTechnikMagazijnModel.h */,
 				23D63098185E03E200EA1A0E /* Makefile */,
@@ -169,6 +171,7 @@
 				23851E7418829DE4001CFDB9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		23FDF248185E021E00CB6A2A /* Build configuration list for PBXProject "FisherTechnikMagazijnRobot" */ = {
 			isa = XCConfigurationList;
