@@ -146,7 +146,7 @@ void main(void)
     /* Just some tests */
     moveZin();
     
-#if 1
+#if 0
     // X-as
     for(i = 0; i <= 10; i++){
         moveToPosition(i, 0);
@@ -217,10 +217,19 @@ void main(void)
         _delay_ms(1000);
     }
 #endif
-    
-    
-    
     // End of tests
+    
+    
+    // Pickup a block and place it somewhere
+    moveToPickUpPoint();
+    moveZout();
+    moveToPosition(0,15);
+    moveZin();
+    moveToPosition(12,15);
+    moveZout();
+    moveToPosition(12,14);
+    moveZin();
+    
     
     
     // main run loop never exit!
