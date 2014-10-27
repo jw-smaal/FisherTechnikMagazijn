@@ -37,7 +37,7 @@ main.o: main.c
 FisherTechnikMagazijnModel.o: FisherTechnikMagazijnModel.c
 
 clean:
-	rm -rf *.o $(PRG).elf *.eps *.png *.pdf *.bak $(PRG).bin $(PRG).hex $(PRG).srec
+	rm -rf *.o $(PRG).elf *.eps *.png *.bak $(PRG).bin $(PRG).hex $(PRG).srec
 	rm -rf *.lst *.map $(EXTRA_CLEAN_FILES)
 
 install: all
