@@ -11,7 +11,8 @@ AVRTOOLS_PATH = /opt/local/bin
 
 
 MCU_TARGET     = atmega328p
-OPTIMIZE       = -O2
+OPTIMIZE       = -O1 -mcall-prologues
+#OPTIMIZE       = -O2
 
 DEFS           =
 LIBS           =
